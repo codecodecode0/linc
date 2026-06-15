@@ -25,22 +25,26 @@ def seed_stats() -> PlatformStats:
 
 def seed_creators() -> List[Creator]:
     return [
-        Creator(id="1", name="Maya Chen", handle="@mayacreates",
-                niche="Beauty & Skincare", location="Mumbai", followers="480K",
+        Creator(id="1", name="Maya Chen", email="maya@example.com",
+                phone="+919800000001", handle="@mayacreates",
+                niche="Beauty & Skincare", city="Mumbai", followers="480K",
                 engagement="4.8%", match_score=96, avatar="MC", certified=True,
-                rate=85000),
-        Creator(id="2", name="Rohan Mehta", handle="@rohaneats",
-                niche="Food & Drinks", location="Delhi", followers="320K",
+                rate=85000, status="active"),
+        Creator(id="2", name="Rohan Mehta", email="rohan@example.com",
+                phone="+919800000002", handle="@rohaneats",
+                niche="Food & Drinks", city="Delhi", followers="320K",
                 engagement="3.2%", match_score=91, avatar="RM", certified=True,
-                rate=60000),
-        Creator(id="3", name="Priya Sharma", handle="@priyafit",
-                niche="Health & Fitness", location="Bengaluru", followers="610K",
+                rate=60000, status="active"),
+        Creator(id="3", name="Priya Sharma", email="priya@example.com",
+                phone="+919800000003", handle="@priyafit",
+                niche="Health & Fitness", city="Bengaluru", followers="610K",
                 engagement="5.1%", match_score=88, avatar="PS", certified=False,
-                rate=95000),
-        Creator(id="4", name="Arjun Nair", handle="@arjuntech",
-                niche="Phones & Gadgets", location="Hyderabad", followers="270K",
+                rate=95000, status="active"),
+        Creator(id="4", name="Arjun Nair", email="arjun@example.com",
+                phone="+919800000004", handle="@arjuntech",
+                niche="Phones & Gadgets", city="Hyderabad", followers="270K",
                 engagement="2.9%", match_score=84, avatar="AN", certified=True,
-                rate=70000),
+                rate=70000, status="active"),
     ]
 
 

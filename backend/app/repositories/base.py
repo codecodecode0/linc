@@ -13,6 +13,7 @@ from typing import List, Optional
 
 from ..models import (
     Activity,
+    Brand,
     Campaign,
     Creator,
     Deal,
@@ -28,6 +29,50 @@ class CreatorRepository(ABC):
 
     @abstractmethod
     def get(self, creator_id: str) -> Optional[Creator]: ...
+
+    @abstractmethod
+    def get_by_email(self, email: str) -> Optional[Creator]: ...
+
+    @abstractmethod
+    def get_by_phone(self, phone: str) -> Optional[Creator]: ...
+
+    @abstractmethod
+    def create(self, creator: Creator) -> Creator: ...
+
+    @abstractmethod
+    def save(self, creator: Creator) -> Creator: ...
+
+
+class BrandRepository(ABC):
+    @abstractmethod
+    def get(self, brand_id: str) -> Optional[Brand]: ...
+
+    @abstractmethod
+    def get_by_email(self, email: str) -> Optional[Brand]: ...
+
+    @abstractmethod
+    def get_by_phone(self, phone: str) -> Optional[Brand]: ...
+
+    @abstractmethod
+    def create(self, brand: Brand) -> Brand: ...
+
+    @abstractmethod
+    def save(self, brand: Brand) -> Brand: ...
+
+
+class OtpRepository(ABC):
+    """Transient store for OTP challenges, keyed by 'channel:value'."""
+
+    @abstractmethod
+    def set(self, key: str, code: str, ttl_seconds: int) -> None: ...
+
+    @abstractmethod
+    def get(self, key: str) -> Optional[str]:
+        """Return the code if present and unexpired, else None."""
+        ...
+
+    @abstractmethod
+    def delete(self, key: str) -> None: ...
 
 
 class ConnectionRepository(ABC):

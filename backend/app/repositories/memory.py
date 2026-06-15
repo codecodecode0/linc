@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Tuple
 from ..data import seed
 from ..models import (
     Activity,
+    Brand,
     Campaign,
     Creator,
     Deal,
@@ -20,10 +21,12 @@ from ..models import (
     SocialConnection,
 )
 from .base import (
+    BrandRepository,
     CatalogRepository,
     ConnectionRepository,
     CreatorRepository,
     OAuthStateRepository,
+    OtpRepository,
 )
 
 
@@ -36,6 +39,72 @@ class InMemoryCreatorRepository(CreatorRepository):
 
     def get(self, creator_id: str) -> Optional[Creator]:
         return self._creators.get(creator_id)
+
+    def get_by_email(self, email: str) -> Optional[Creator]:
+        return next(
+            (c for c in self._creators.values() if c.email.lower() == email.lower()),
+            None,
+        )
+
+    def get_by_phone(self, phone: str) -> Optional[Creator]:
+        return next(
+            (c for c in self._creators.values() if c.phone == phone), None
+        )
+
+    def create(self, creator: Creator) -> Creator:
+        self._creators[creator.id] = creator
+        return creator
+
+    def save(self, creator: Creator) -> Creator:
+        self._creators[creator.id] = creator
+        return creator
+
+
+class InMemoryBrandRepository(BrandRepository):
+    def __init__(self) -> None:
+        self._brands: Dict[str, Brand] = {}
+
+    def get(self, brand_id: str) -> Optional[Brand]:
+        return self._brands.get(brand_id)
+
+    def get_by_email(self, email: str) -> Optional[Brand]:
+        return next(
+            (b for b in self._brands.values() if b.email.lower() == email.lower()),
+            None,
+        )
+
+    def get_by_phone(self, phone: str) -> Optional[Brand]:
+        return next((b for b in self._brands.values() if b.phone == phone), None)
+
+    def create(self, brand: Brand) -> Brand:
+        self._brands[brand.id] = brand
+        return brand
+
+    def save(self, brand: Brand) -> Brand:
+        self._brands[brand.id] = brand
+        return brand
+
+
+class InMemoryOtpRepository(OtpRepository):
+    def __init__(self) -> None:
+        # key -> (code, expires_at)
+        self._store: Dict[str, Tuple[str, float]] = {}
+
+    def set(self, key: str, code: str, ttl_seconds: int) -> None:
+        self._store[key] = (code, time.time() + ttl_seconds)
+
+    def get(self, key: str) -> Optional[str]:
+        entry = self._store.get(key)
+        if not entry:
+            return None
+        code, expires_at = entry
+        if time.time() > expires_at:
+            self._store.pop(key, None)
+            return None
+        return code
+
+    def delete(self, key: str) -> None:
+        self._store.pop(key, None)
 
 
 class InMemoryConnectionRepository(ConnectionRepository):

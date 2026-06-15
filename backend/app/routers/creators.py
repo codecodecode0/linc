@@ -6,9 +6,23 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from ..deps import get_creator_service
-from ..models import Creator, Platform, SocialConnection, SocialInsights
-from ..services import CreatorNotFound, CreatorService, NotConnected
+from ..deps import get_account_service, get_creator_service
+from ..models import (
+    Creator,
+    CreatorCreate,
+    CreatorUpdate,
+    Platform,
+    SocialConnection,
+    SocialInsights,
+)
+from ..services import (
+    AccountNotFound,
+    AccountService,
+    CreatorNotFound,
+    CreatorService,
+    DuplicateAccount,
+    NotConnected,
+)
 
 router = APIRouter(prefix="/api/creators", tags=["creators"])
 
@@ -16,6 +30,28 @@ router = APIRouter(prefix="/api/creators", tags=["creators"])
 @router.get("", response_model=List[Creator])
 def list_creators(service: CreatorService = Depends(get_creator_service)):
     return service.list_creators()
+
+
+@router.post("", response_model=Creator, status_code=201)
+def create_creator(
+    body: CreatorCreate, service: AccountService = Depends(get_account_service)
+):
+    try:
+        return service.create_creator(body)
+    except DuplicateAccount as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+
+@router.patch("/{creator_id}", response_model=Creator)
+def update_creator(
+    creator_id: str,
+    body: CreatorUpdate,
+    service: AccountService = Depends(get_account_service),
+):
+    try:
+        return service.update_creator(creator_id, body)
+    except AccountNotFound:
+        raise HTTPException(status_code=404, detail="Creator not found")
 
 
 @router.get("/{creator_id}", response_model=Creator)

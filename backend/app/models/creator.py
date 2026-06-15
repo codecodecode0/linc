@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import List
+from datetime import datetime, timezone
+from typing import List, Optional
 
 from pydantic import Field
 
@@ -8,17 +9,29 @@ from .base import CamelModel
 from .connection import Platform
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class Creator(CamelModel):
     id: str
     name: str
+    email: str
+    phone: str
     handle: str
-    niche: str
-    location: str
-    followers: str  # display string, e.g. "480K"
-    engagement: str  # display string, e.g. "4.8%"
-    match_score: int
-    avatar: str
-    certified: bool
-    rate: int  # starting rate per video, in rupees
+    niche: str = ""
+    city: Optional[str] = None
+    country: Optional[str] = None
+    bio: Optional[str] = None
+    # Cached display strings used by the recommendation cards.
+    followers: str = ""
+    engagement: str = ""
+    match_score: int = 0
+    avatar: str = ""
+    certified: bool = False
+    rate: int = 0  # starting rate per video, in rupees
+    status: str = "onboarding"  # onboarding | active | paused
+    google_sub: Optional[str] = None
+    created_at: datetime = Field(default_factory=_utcnow)
     # Which platforms this creator has linked — derived at read time.
     connected_platforms: List[Platform] = Field(default_factory=list)

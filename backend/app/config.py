@@ -30,6 +30,16 @@ class Settings(BaseSettings):
         "https://www.googleapis.com/auth/yt-analytics.readonly"
     )
 
+    # --- Google "Sign in with Gmail" (OpenID Connect) — placeholders ---
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    google_login_scopes: str = "openid,email,profile"
+
+    # --- Auth / sessions ---
+    auth_secret: str = "dev-insecure-change-me"
+    session_ttl_seconds: int = 60 * 60 * 24 * 7  # 7 days
+    otp_ttl_seconds: int = 300  # 5 minutes
+
     # --- App URLs ---
     frontend_url: str = "http://localhost:8000"
     api_base_url: str = "http://localhost:8000"
@@ -56,6 +66,14 @@ class Settings(BaseSettings):
     @property
     def youtube_scopes_list(self) -> List[str]:
         return self._split(self.youtube_scopes)
+
+    @property
+    def google_login_scopes_list(self) -> List[str]:
+        return self._split(self.google_login_scopes)
+
+    @property
+    def google_login_mock(self) -> bool:
+        return not (self.google_client_id and self.google_client_secret)
 
     @property
     def cors_list(self) -> List[str]:

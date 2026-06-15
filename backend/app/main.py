@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .deps import get_registry
-from .routers import auth, creators, platform
+from .routers import auth, brands, creators, login, platform
 
 settings = get_settings()
 
@@ -29,8 +29,12 @@ app.add_middleware(
 )
 
 # API routers (registered before the static mount so /api/* wins).
+# login.router is added BEFORE auth.router so literal /api/auth/otp|google/*
+# paths win over the social /api/auth/{platform}/* pattern.
 app.include_router(platform.router)
 app.include_router(creators.router)
+app.include_router(brands.router)
+app.include_router(login.router)
 app.include_router(auth.router)
 
 
