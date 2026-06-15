@@ -9,7 +9,13 @@ from __future__ import annotations
 
 from typing import List
 
-from ..models import Activity, Campaign, Creator, Deal, PlatformStats
+from ..models import (
+    Activity,
+    CampaignSummary,
+    Creator,
+    DealSummary,
+    PlatformStats,
+)
 
 
 def seed_stats() -> PlatformStats:
@@ -48,31 +54,31 @@ def seed_creators() -> List[Creator]:
     ]
 
 
-def seed_deals() -> List[Deal]:
+def seed_deals() -> List[DealSummary]:
     return [
-        Deal(id="d1", title="Glow Face Serum — Video Ad", brand="Glow Labs",
+        DealSummary(id="d1", title="Glow Face Serum — Video Ad", brand="Glow Labs",
              creator="Maya Chen", status="review", budget=85000, path="video"),
-        Deal(id="d2", title="Protein Bar — AI Photo Ads", brand="Fuel Co",
+        DealSummary(id="d2", title="Protein Bar — AI Photo Ads", brand="Fuel Co",
              creator="Rohan Mehta", status="paid", budget=55000, path="ai-static"),
-        Deal(id="d3", title="Smart Watch — AI Video Ads", brand="Pulse Gear",
+        DealSummary(id="d3", title="Smart Watch — AI Video Ads", brand="Pulse Gear",
              creator="Arjun Nair", status="filming", budget=160000, path="ai-video"),
-        Deal(id="d4", title="Yoga Mat — New Deal", brand="ZenFlow",
+        DealSummary(id="d4", title="Yoga Mat — New Deal", brand="ZenFlow",
              creator="Priya Sharma", status="contract", budget=70000, path="video"),
     ]
 
 
-def seed_campaigns() -> List[Campaign]:
+def seed_campaigns() -> List[CampaignSummary]:
     return [
-        Campaign(id="c1", name="Glow Serum — Festive Push", brand="Glow Labs",
+        CampaignSummary(id="c1", name="Glow Serum — Festive Push", brand="Glow Labs",
                  creator="Maya Chen", status="live", spend=420000, roas=6.4,
                  ctr=2.8, reach=1840000),
-        Campaign(id="c2", name="Protein Bar — Always On", brand="Fuel Co",
+        CampaignSummary(id="c2", name="Protein Bar — Always On", brand="Fuel Co",
                  creator="Rohan Mehta", status="live", spend=280000, roas=4.9,
                  ctr=2.1, reach=1120000),
-        Campaign(id="c3", name="Smart Watch — Launch", brand="Pulse Gear",
+        CampaignSummary(id="c3", name="Smart Watch — Launch", brand="Pulse Gear",
                  creator="Arjun Nair", status="live", spend=650000, roas=5.7,
                  ctr=3.2, reach=2350000),
-        Campaign(id="c4", name="Yoga Mat — Test Batch", brand="ZenFlow",
+        CampaignSummary(id="c4", name="Yoga Mat — Test Batch", brand="ZenFlow",
                  creator="Priya Sharma", status="draft", spend=0, roas=0.0,
                  ctr=0.0, reach=0),
     ]

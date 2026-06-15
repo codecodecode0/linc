@@ -12,7 +12,10 @@ class PlatformStats(CamelModel):
     avg_roas: float
 
 
-class Deal(CamelModel):
+# NOTE: these two are read-only *summary* views that power the demo dashboards
+# (/api/deals, /api/campaigns). The real, CRUD-managed entities are Deal and
+# Campaign in their own modules.
+class DealSummary(CamelModel):
     id: str
     title: str
     brand: str
@@ -22,7 +25,7 @@ class Deal(CamelModel):
     path: str  # video | ai-static | ai-video
 
 
-class Campaign(CamelModel):
+class CampaignSummary(CamelModel):
     id: str
     name: str
     brand: str

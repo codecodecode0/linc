@@ -13,9 +13,9 @@ from ..data import seed
 from ..models import (
     Activity,
     Brand,
-    Campaign,
+    CampaignSummary,
     Creator,
-    Deal,
+    DealSummary,
     Platform,
     PlatformStats,
     SocialConnection,
@@ -163,10 +163,10 @@ class InMemoryCatalogRepository(CatalogRepository):
     def stats(self) -> PlatformStats:
         return self._stats
 
-    def deals(self) -> List[Deal]:
+    def deals(self) -> List[DealSummary]:
         return self._deals
 
-    def campaigns(self) -> List[Campaign]:
+    def campaigns(self) -> List[CampaignSummary]:
         return self._campaigns
 
     def activity(self) -> List[Activity]:

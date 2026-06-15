@@ -14,9 +14,9 @@ from typing import List, Optional
 from ..models import (
     Activity,
     Brand,
-    Campaign,
+    CampaignSummary,
     Creator,
-    Deal,
+    DealSummary,
     Platform,
     PlatformStats,
     SocialConnection,
@@ -114,10 +114,10 @@ class CatalogRepository(ABC):
     def stats(self) -> PlatformStats: ...
 
     @abstractmethod
-    def deals(self) -> List[Deal]: ...
+    def deals(self) -> List[DealSummary]: ...
 
     @abstractmethod
-    def campaigns(self) -> List[Campaign]: ...
+    def campaigns(self) -> List[CampaignSummary]: ...
 
     @abstractmethod
     def activity(self) -> List[Activity]: ...

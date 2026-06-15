@@ -10,7 +10,18 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .deps import get_registry
-from .routers import auth, brands, creators, login, platform
+from .routers import (
+    auth,
+    brands,
+    campaigns,
+    content,
+    creators,
+    deals,
+    licenses,
+    login,
+    payment_details,
+    platform,
+)
 
 settings = get_settings()
 
@@ -34,6 +45,11 @@ app.add_middleware(
 app.include_router(platform.router)
 app.include_router(creators.router)
 app.include_router(brands.router)
+app.include_router(campaigns.router)
+app.include_router(deals.router)
+app.include_router(content.router)
+app.include_router(licenses.router)
+app.include_router(payment_details.router)
 app.include_router(login.router)
 app.include_router(auth.router)
 

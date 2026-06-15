@@ -6,6 +6,7 @@ from .base import (
     OAuthStateRepository,
     OtpRepository,
 )
+from .crud import InMemoryCrudRepository
 from .memory import (
     InMemoryBrandRepository,
     InMemoryCatalogRepository,
@@ -28,4 +29,5 @@ __all__ = [
     "InMemoryOAuthStateRepository",
     "InMemoryOtpRepository",
     "InMemoryCatalogRepository",
+    "InMemoryCrudRepository",
 ]

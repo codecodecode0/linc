@@ -12,8 +12,23 @@ from .auth import (
 )
 from .base import CamelModel
 from .brand import Brand
+from .campaign import (
+    Campaign,
+    CampaignCreate,
+    CampaignObjective,
+    CampaignStatus,
+    CampaignUpdate,
+)
 from .connection import ConnectionStatus, Platform, SocialConnection
+from .content import (
+    Content,
+    ContentCreate,
+    ContentStatus,
+    ContentType,
+    ContentUpdate,
+)
 from .creator import Creator
+from .deal import Deal, DealCreate, DealStatus, DealType, DealUpdate
 from .insights import (
     AgeGenderBreakdown,
     AudienceDemographics,
@@ -22,10 +37,31 @@ from .insights import (
     PlaceShare,
     SocialInsights,
 )
-from .platform import Activity, Campaign, Deal, PlatformStats
+from .license import (
+    GranteeType,
+    LicenseStatus,
+    LikenessLicense,
+    LikenessLicenseCreate,
+    LikenessLicenseUpdate,
+    MediaScope,
+    RateModel,
+)
+from .payment_details import (
+    PaymentInstrument,
+    PaymentMethod,
+    PaymentMethodCreate,
+    PaymentMethodUpdate,
+    PayoutAccount,
+    PayoutAccountCreate,
+    PayoutAccountUpdate,
+    PayoutMethod,
+    VerificationStatus,
+)
+from .platform import Activity, CampaignSummary, DealSummary, PlatformStats
 
 __all__ = [
     "CamelModel",
+    # accounts / auth
     "Creator",
     "Brand",
     "AccountType",
@@ -38,6 +74,7 @@ __all__ = [
     "OtpVerify",
     "OtpRequestResult",
     "Session",
+    # social
     "Platform",
     "SocialConnection",
     "ConnectionStatus",
@@ -47,8 +84,43 @@ __all__ = [
     "AudienceDemographics",
     "AgeGenderBreakdown",
     "PlaceShare",
-    "PlatformStats",
-    "Deal",
+    # campaigns / deals / content
     "Campaign",
+    "CampaignCreate",
+    "CampaignUpdate",
+    "CampaignObjective",
+    "CampaignStatus",
+    "Deal",
+    "DealCreate",
+    "DealUpdate",
+    "DealType",
+    "DealStatus",
+    "Content",
+    "ContentCreate",
+    "ContentUpdate",
+    "ContentType",
+    "ContentStatus",
+    # likeness
+    "LikenessLicense",
+    "LikenessLicenseCreate",
+    "LikenessLicenseUpdate",
+    "GranteeType",
+    "MediaScope",
+    "RateModel",
+    "LicenseStatus",
+    # payment details
+    "PayoutAccount",
+    "PayoutAccountCreate",
+    "PayoutAccountUpdate",
+    "PayoutMethod",
+    "VerificationStatus",
+    "PaymentMethod",
+    "PaymentMethodCreate",
+    "PaymentMethodUpdate",
+    "PaymentInstrument",
+    # demo dashboards
+    "PlatformStats",
+    "DealSummary",
+    "CampaignSummary",
     "Activity",
 ]

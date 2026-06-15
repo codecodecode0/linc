@@ -11,6 +11,14 @@ from __future__ import annotations
 from functools import lru_cache
 
 from .config import Settings, get_settings
+from .models import (
+    Campaign,
+    Content,
+    Deal,
+    LikenessLicense,
+    PaymentMethod,
+    PayoutAccount,
+)
 from .providers import InstagramProvider, ProviderRegistry, YouTubeProvider
 from .repositories import (
     BrandRepository,
@@ -21,12 +29,19 @@ from .repositories import (
     InMemoryCatalogRepository,
     InMemoryConnectionRepository,
     InMemoryCreatorRepository,
+    InMemoryCrudRepository,
     InMemoryOAuthStateRepository,
     InMemoryOtpRepository,
     OAuthStateRepository,
     OtpRepository,
 )
-from .services import AccountService, AuthService, CreatorService, TokenService
+from .services import (
+    AccountService,
+    AuthService,
+    CreatorService,
+    CrudService,
+    TokenService,
+)
 
 
 # --- Repository singletons --------------------------------------------------
@@ -109,6 +124,37 @@ def get_auth_service() -> AuthService:
         otps=get_otp_repository(),
         tokens=get_token_service(),
     )
+
+
+# --- Domain CRUD services (one in-memory store each) ------------------------
+@lru_cache
+def get_campaign_service() -> CrudService[Campaign]:
+    return CrudService(InMemoryCrudRepository())
+
+
+@lru_cache
+def get_deal_service() -> CrudService[Deal]:
+    return CrudService(InMemoryCrudRepository())
+
+
+@lru_cache
+def get_content_service() -> CrudService[Content]:
+    return CrudService(InMemoryCrudRepository())
+
+
+@lru_cache
+def get_license_service() -> CrudService[LikenessLicense]:
+    return CrudService(InMemoryCrudRepository())
+
+
+@lru_cache
+def get_payout_account_service() -> CrudService[PayoutAccount]:
+    return CrudService(InMemoryCrudRepository())
+
+
+@lru_cache
+def get_payment_method_service() -> CrudService[PaymentMethod]:
+    return CrudService(InMemoryCrudRepository())
 
 
 def settings() -> Settings:
