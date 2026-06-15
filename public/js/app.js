@@ -1,5 +1,24 @@
 // Built-in sample data. Used as a fallback when the /api backend isn't
 // available — e.g. when this UI is served statically on GitHub Pages.
+const SAMPLE_AUDIENCE = {
+  ageGender: [
+    { label: '18-24', female: 16.4, male: 8.2 },
+    { label: '25-34', female: 24.1, male: 12.7 },
+    { label: '35-44', female: 14.3, male: 9.1 },
+    { label: '45-54', female: 6.2, male: 4.0 },
+    { label: '55+', female: 2.8, male: 1.9 },
+  ],
+  topCities: [
+    { name: 'Mumbai', share: 18.6 }, { name: 'Delhi', share: 14.2 },
+    { name: 'Bengaluru', share: 11.5 }, { name: 'Hyderabad', share: 7.8 },
+    { name: 'Pune', share: 6.1 },
+  ],
+  topCountries: [
+    { name: 'India', share: 82.0 }, { name: 'United States', share: 5.4 },
+    { name: 'UAE', share: 3.6 }, { name: 'United Kingdom', share: 2.7 },
+  ],
+};
+
 const SAMPLE = {
   stats: {
     creatorsCertified: 9000,
@@ -34,7 +53,42 @@ const SAMPLE = {
     { id: 'a4', type: 'delivery', text: 'Glow Face Serum video delivered', meta: 'Waiting for brand to check', time: '14 min ago' },
     { id: 'a5', type: 'earning', text: 'Arjun Nair earned ₹1,200', meta: 'Pulse Gear used his look in an AI ad', time: '21 min ago' },
   ],
+  // Insights are keyed by platform — same shape, different metrics.
+  insights: {
+    instagram: {
+      creatorId: '1', platform: 'instagram', username: 'mayacreates',
+      followers: 480000, followersLabel: 'Followers', source: 'mock',
+      metrics: [
+        { key: 'engagement', label: 'Engagement', value: 4.2, format: 'percent' },
+        { key: 'reach', label: 'Reach (day)', value: 1824000, format: 'number' },
+        { key: 'impressions', label: 'Impressions', value: 2976000, format: 'number' },
+        { key: 'profileViews', label: 'Profile views', value: 57600, format: 'number' },
+      ],
+      audience: SAMPLE_AUDIENCE,
+    },
+    youtube: {
+      creatorId: '1', platform: 'youtube', username: 'Maya Chen',
+      followers: 265000, followersLabel: 'Subscribers', source: 'mock',
+      metrics: [
+        { key: 'views', label: 'Views (28d)', value: 1325000, format: 'number' },
+        { key: 'videos', label: 'Videos', value: 180, format: 'number' },
+        { key: 'watchTime', label: 'Watch time', value: 47700, format: 'hours' },
+        { key: 'avgView', label: 'Avg view', value: 222, format: 'duration' },
+      ],
+      audience: SAMPLE_AUDIENCE,
+    },
+  },
 };
+
+// The creator viewing their own dashboard (Maya in this demo).
+const SELF_CREATOR_ID = '1';
+
+// Platforms shown on the creator dashboard. Add an entry to support more.
+const PLATFORMS = [
+  { key: 'instagram', label: 'Instagram', initials: 'IG' },
+  { key: 'youtube', label: 'YouTube', initials: 'YT' },
+];
+const demoKey = (platform) => `linc_connected_${platform}`;
 
 // Tracks whether we're showing live API data or the built-in sample data.
 let usingLiveApi = false;
@@ -283,11 +337,207 @@ async function loadActivity() {
   targets.forEach((el) => renderActivity(el, items));
 }
 
+// ---------------------------------------------------------------------------
+// Social connection flow (creator dashboard) — platform-agnostic
+// ---------------------------------------------------------------------------
+
+function platformIcon(platform) {
+  if (platform === 'youtube') {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
+      <path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none" />
+    </svg>`;
+  }
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+  </svg>`;
+}
+
+function formatMetric(value, format) {
+  if (format === 'percent') return `${value}%`;
+  if (format === 'hours') return `${formatCompact(value)}h`;
+  if (format === 'duration') {
+    const m = Math.floor(value / 60);
+    const s = Math.round(value % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
+  return formatCompact(value);
+}
+
+function socialBar(pct, max) {
+  const w = Math.min((pct / max) * 100, 100);
+  return `<span class="ig-bar"><span style="width:${w}%"></span></span>`;
+}
+
+function renderConnect(card, platform, mode) {
+  const label = platform.label;
+  const action =
+    mode === 'live'
+      ? `<a class="btn btn-primary" href="/api/auth/${platform.key}/login?creator_id=${SELF_CREATOR_ID}">Connect ${label}</a>`
+      : `<button class="btn btn-primary" data-connect="${platform.key}">Connect ${label}</button>`;
+
+  card.innerHTML = `
+    <div class="social-connect">
+      <div class="social-logo ${platform.key}">${platformIcon(platform.key)}</div>
+      <div class="social-connect-copy">
+        <h4>Connect ${label}</h4>
+        <p>Show brands your real ${label} numbers — followers, engagement and
+           audience — and get matched faster.</p>
+      </div>
+      ${action}
+    </div>
+  `;
+
+  if (mode === 'demo') {
+    card.querySelector('[data-connect]')?.addEventListener('click', () => {
+      localStorage.setItem(demoKey(platform.key), '1');
+      renderInsights(card, platform, SAMPLE.insights[platform.key], true);
+    });
+  }
+}
+
+function renderInsights(card, platform, insights, isDemo) {
+  const maxAge = Math.max(
+    ...insights.audience.ageGender.map((a) => a.female + a.male),
+  );
+  const sourceLabel = insights.source === 'live' ? 'Live data' : 'Sample data';
+
+  const tiles = [
+    `<div><span>${insights.followersLabel}</span><strong>${formatCompact(insights.followers)}</strong></div>`,
+    ...insights.metrics.map(
+      (m) =>
+        `<div><span>${m.label}</span><strong>${formatMetric(m.value, m.format)}</strong></div>`,
+    ),
+  ].join('');
+
+  card.innerHTML = `
+    <div class="social-insights">
+      <div class="ig-head">
+        <div class="social-logo sm ${platform.key}">${platformIcon(platform.key)}</div>
+        <div>
+          <strong>${platform.key === 'youtube' ? '' : '@'}${insights.username}</strong>
+          <span>${platform.label} · connected</span>
+        </div>
+        <span class="ig-tag">${sourceLabel}</span>
+        <button class="ig-disconnect" data-disconnect="${platform.key}">Disconnect</button>
+      </div>
+
+      <div class="ig-metrics">${tiles}</div>
+
+      <div class="ig-cols">
+        <div class="ig-block">
+          <h5>Audience age &amp; gender</h5>
+          ${insights.audience.ageGender
+            .map(
+              (a) => `
+            <div class="ig-row">
+              <span class="ig-label">${a.label}</span>
+              ${socialBar(a.female + a.male, maxAge)}
+              <span class="ig-val">${(a.female + a.male).toFixed(0)}%</span>
+            </div>`,
+            )
+            .join('')}
+          <div class="ig-legend"><span class="dot-f"></span>Women &nbsp;<span class="dot-m"></span>Men</div>
+        </div>
+        <div class="ig-block">
+          <h5>Top cities</h5>
+          ${insights.audience.topCities
+            .map(
+              (c) => `
+            <div class="ig-row">
+              <span class="ig-label">${c.name}</span>
+              ${socialBar(c.share, insights.audience.topCities[0].share)}
+              <span class="ig-val">${c.share}%</span>
+            </div>`,
+            )
+            .join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  card.querySelector('[data-disconnect]')?.addEventListener('click', async () => {
+    if (isDemo) {
+      localStorage.removeItem(demoKey(platform.key));
+      renderConnect(card, platform, 'demo');
+      return;
+    }
+    try {
+      await fetch(
+        `/api/creators/${SELF_CREATOR_ID}/connections/${platform.key}`,
+        { method: 'DELETE' },
+      );
+    } catch {
+      /* ignore */
+    }
+    loadSocialPanel();
+  });
+}
+
+async function loadSocialPanel() {
+  const body = document.getElementById('social-body');
+  if (!body) return;
+
+  // One fetch tells us both backend reachability and which platforms are linked.
+  let backendOk = false;
+  let connections = [];
+  try {
+    const res = await fetch(`/api/creators/${SELF_CREATOR_ID}/connections`);
+    if (res.ok) {
+      backendOk = true;
+      connections = await res.json();
+    }
+  } catch {
+    backendOk = false;
+  }
+
+  body.innerHTML = PLATFORMS.map(
+    (p) => `<div class="social-card" id="sc-${p.key}"></div>`,
+  ).join('');
+
+  for (const platform of PLATFORMS) {
+    const card = document.getElementById(`sc-${platform.key}`);
+    if (!card) continue;
+
+    if (backendOk) {
+      const connected = connections.some((c) => c.platform === platform.key);
+      if (connected) {
+        const insights = await getData(
+          `/api/creators/${SELF_CREATOR_ID}/insights/${platform.key}`,
+          null,
+        );
+        renderInsights(card, platform, insights || SAMPLE.insights[platform.key], false);
+      } else {
+        renderConnect(card, platform, 'live');
+      }
+    } else if (localStorage.getItem(demoKey(platform.key))) {
+      renderInsights(card, platform, SAMPLE.insights[platform.key], true);
+    } else {
+      renderConnect(card, platform, 'demo');
+    }
+  }
+}
+
+// Handle the redirect back from any platform's OAuth flow.
+function handleAuthRedirect() {
+  const qs = new URLSearchParams(window.location.search);
+  if (qs.get('connected') || qs.get('error')) {
+    showView('creator');
+  }
+  if (qs.has('connected') || qs.has('error') || qs.has('creator')) {
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
 // Load everything, then reflect whether we used the live API or sample data.
+handleAuthRedirect();
 Promise.all([
   loadStats(),
   loadDeals(),
   loadCreators(),
   loadCampaigns(),
   loadActivity(),
+  loadSocialPanel(),
 ]).then(setApiStatus);

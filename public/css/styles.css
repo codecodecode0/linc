@@ -1900,3 +1900,257 @@ main {
     display: none;
   }
 }
+
+/* Instagram insights panel */
+.ig-connect {
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+}
+.ig-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b 45%, #6228d7);
+}
+.ig-logo svg {
+  width: 28px;
+  height: 28px;
+}
+.ig-connect h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.ig-connect p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 380px;
+  margin: 0 auto 1.25rem;
+}
+.ig-connect .btn {
+  text-decoration: none;
+  display: inline-block;
+}
+.ig-note {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.ig-insights {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.ig-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+.ig-head strong {
+  display: block;
+  font-size: 0.95rem;
+}
+.ig-head span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.ig-disconnect {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.ig-disconnect:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ig-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.ig-metrics div {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+}
+.ig-metrics span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+.ig-metrics strong {
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.ig-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.ig-block h5 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+.ig-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.55rem;
+}
+.ig-label {
+  width: 74px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.ig-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.ig-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--accent), var(--warm));
+}
+.ig-val {
+  width: 38px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.ig-legend {
+  margin-top: 0.85rem;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+}
+.ig-legend .dot-f,
+.ig-legend .dot-m {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.35rem;
+}
+.ig-legend .dot-f {
+  background: var(--accent);
+}
+.ig-legend .dot-m {
+  background: var(--warm);
+}
+
+/* Social connection cards (one per platform) */
+.social-card + .social-card {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.social-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.social-logo svg {
+  width: 24px;
+  height: 24px;
+}
+.social-logo.sm {
+  width: 38px;
+  height: 38px;
+}
+.social-logo.sm svg {
+  width: 20px;
+  height: 20px;
+}
+.social-logo.instagram {
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b 45%, #6228d7);
+}
+.social-logo.youtube {
+  background: #ff0000;
+}
+
+.social-connect {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+.social-connect-copy {
+  flex: 1;
+}
+.social-connect-copy h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.social-connect-copy p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 420px;
+}
+.social-connect .btn {
+  text-decoration: none;
+  white-space: nowrap;
+}
+.social-insights {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.ig-tag {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 0.22rem 0.55rem;
+  border-radius: 100px;
+}
+.ig-head .ig-disconnect {
+  margin-left: 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .ig-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ig-cols {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .social-connect {
+    flex-direction: column;
+    text-align: center;
+  }
+}

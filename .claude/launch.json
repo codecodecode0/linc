@@ -3,9 +3,18 @@
   "configurations": [
     {
       "name": "linc",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start:dev"],
-      "port": 3000
+      "runtimeExecutable": "/Users/siddhantjadhav/Desktop/code eater/linc/backend/.venv/bin/uvicorn",
+      "runtimeArgs": [
+        "app.main:app",
+        "--app-dir",
+        "/Users/siddhantjadhav/Desktop/code eater/linc/backend",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000"
+      ],
+      "port": 8000,
+      "autoPort": false
     }
   ]
 }
