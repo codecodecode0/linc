@@ -33,8 +33,8 @@ describe('AppController (e2e)', () => {
       .get('/api/stats')
       .expect(200)
       .expect((res) => {
-        const body = res.body as { activeDeals: number };
-        expect(body.activeDeals).toBeDefined();
+        const body = res.body as { creatorsCertified: number };
+        expect(body.creatorsCertified).toBeDefined();
       });
   });
 
