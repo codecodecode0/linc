@@ -1,0 +1,858 @@
+/* linc app — auth, shell, forms, tables. Builds on css/styles.css variables. */
+
+.app-body {
+  background: var(--bg);
+}
+
+.app-loading {
+  padding: 6rem 2rem;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-150%);
+  background: var(--text);
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  max-width: 90vw;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+.toast.error {
+  background: #c0392b;
+}
+.toast.success {
+  background: var(--success);
+}
+
+/* ---------- Auth screens ---------- */
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(28, 25, 23, 0.1);
+}
+.auth-card .logo {
+  margin-bottom: 1.5rem;
+}
+.auth-card h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.auth-card .sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+.role-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.role-toggle button {
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  padding: 0.85rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(28, 25, 23, 0.04);
+}
+.role-toggle button:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.role-toggle button.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.seg {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+.seg button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.5rem;
+  border-radius: 9px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+.seg button.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.auth-alt {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.auth-alt a {
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  margin: 1.25rem 0;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 0.7rem;
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-google:hover {
+  background: var(--surface-2);
+}
+.btn-google svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Forms ---------- */
+.field {
+  margin-bottom: 1rem;
+}
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+.optional-label {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.phone-row {
+  display: grid;
+  grid-template-columns: minmax(118px, 0.4fr) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.35rem;
+}
+.hint strong {
+  color: var(--accent);
+}
+
+/* ---------- App shell ---------- */
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.sidebar .logo {
+  padding: 0.25rem 0.5rem 1.25rem;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.nav-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 500;
+}
+.sidebar-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+.who {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.who strong {
+  display: block;
+}
+.who span {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.main {
+  padding: 2rem 2.5rem;
+  max-width: 1280px;
+  width: 100%;
+}
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.page-head h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.page-head .sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(28, 25, 23, 0.04);
+}
+.card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* Tables */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.tbl th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.tbl tr:last-child td {
+  border-bottom: none;
+}
+.tbl .actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+.badge.green { background: var(--success-soft); color: var(--success); }
+.badge.amber { background: var(--warning-soft); color: var(--warning); }
+.badge.blue { background: var(--info-soft); color: var(--info); }
+.badge.accent { background: var(--accent-soft); color: var(--accent); }
+
+.btn-sm {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+}
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: #c0392b;
+}
+.btn-danger:hover {
+  background: rgba(192, 57, 43, 0.08);
+  border-color: #c0392b;
+}
+.btn:disabled,
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-row .tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.stat-row .tile span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.stat-row .tile strong {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+.back:hover { color: var(--text); }
+
+.inline-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.workspace-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 8px rgba(28, 25, 23, 0.04);
+}
+.panel-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.panel-title h3 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 0.25rem;
+}
+.panel-title p {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.campaign-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: end;
+}
+.campaign-form .span-2 {
+  grid-column: span 2;
+}
+.campaign-form button {
+  min-height: 42px;
+}
+.status-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.status-form select {
+  min-width: 140px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+.brief-box {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  padding: 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.brief-box.muted {
+  color: var(--text-dim);
+}
+.recommendation-grid,
+.deal-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.recommendation-card,
+.deal-card,
+.empty-state {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  padding: 1rem;
+}
+.rec-head,
+.deal-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.rec-head > div:nth-child(2),
+.deal-card-top > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.rec-head h4,
+.deal-card h3 {
+  font-size: 1rem;
+  font-weight: 650;
+}
+.rec-head p,
+.deal-card p,
+.rec-audience {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.rec-head strong {
+  color: var(--accent);
+  font-size: 1rem;
+}
+.rec-meta,
+.deal-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.rec-meta span,
+.deal-facts div {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.55rem 0.65rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.deal-facts span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+.deal-facts strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.reason-list {
+  margin: 0.8rem 0;
+  padding-left: 1rem;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.deliverable-list {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0.85rem 0;
+  padding: 0;
+}
+.deliverable-list li {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.65rem 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+.deliverable-list strong {
+  color: var(--text);
+}
+.deliverable-list span {
+  display: block;
+  margin-top: 0.2rem;
+}
+.deal-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.detail-actions {
+  margin-top: 1.25rem;
+}
+.counter-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: end;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.counter-inline label {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.counter-inline input {
+  min-width: 0;
+  width: 100%;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+.counter-inline input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.detail-counter {
+  max-width: 420px;
+}
+.eyebrow {
+  color: var(--text-dim);
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 650;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+}
+.empty-state h3 {
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 820px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar .logo, .sidebar-foot { display: none; }
+  .main { padding: 1.5rem; }
+  .field-row { grid-template-columns: 1fr; }
+  .phone-row { grid-template-columns: 1fr; }
+  .campaign-form { grid-template-columns: 1fr; }
+  .campaign-form .span-2 { grid-column: span 1; }
+  .panel-title { display: block; }
+  .status-form { margin-top: 0.75rem; }
+}
+
+/* ============================================================
+   Visual polish — bring the app up to the landing-page quality.
+   These rules override earlier flat styles (same selectors, later wins).
+   ============================================================ */
+
+/* Layer the shell above the ambient blobs, like the landing page. */
+.app-body { background: var(--bg); }
+.shell { position: relative; z-index: 1; }
+
+/* Sidebar — premium, calmer, with an accent rail on the active item. */
+.sidebar {
+  padding: 1.5rem 0.9rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent 240px),
+    var(--surface);
+  backdrop-filter: blur(6px);
+}
+.sidebar .logo {
+  padding: 0.25rem 0.6rem 1.5rem;
+}
+.sidebar .logo .logo-text {
+  font-size: 1.3rem;
+}
+.nav-link {
+  position: relative;
+  margin-bottom: 0.15rem;
+  font-weight: 500;
+  transition: background var(--transition), color var(--transition);
+}
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: -0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+.sidebar-foot .who {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.sidebar-foot .who span {
+  text-transform: capitalize;
+}
+
+/* Main column — give content room and a comfortable max width. */
+.main {
+  padding: 2.5rem 3rem 4rem;
+  margin: 0 auto;
+}
+
+/* Page header — larger, with an accent eyebrow underline feel. */
+.page-head { margin-bottom: 2rem; }
+.page-head h1 {
+  font-size: 1.85rem;
+  letter-spacing: -0.02em;
+}
+.page-head .sub { margin-top: 0.25rem; max-width: 640px; line-height: 1.5; }
+
+/* Panels & cards — match the landing .panel: rounded, soft shadow. */
+.card,
+.workspace-panel {
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(28, 25, 23, 0.05);
+  padding: 1.5rem;
+}
+.workspace-panel { margin-bottom: 1.5rem; }
+.panel-title {
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.panel-title h3 { font-size: 1.05rem; }
+
+/* Stat tiles — match landing .stat-card, with a highlight variant. */
+.stat-row { gap: 1.25rem; margin-bottom: 2rem; }
+.stat-row .tile {
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(28, 25, 23, 0.05);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.stat-row .tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(28, 25, 23, 0.08);
+}
+.stat-row .tile strong { letter-spacing: -0.02em; }
+.stat-row .tile.highlight {
+  border-color: rgba(255, 106, 61, 0.3);
+  background: linear-gradient(150deg, var(--accent-soft), var(--surface));
+}
+
+/* Home quick cards — interactive, lift on hover, with an arrow cue. */
+.card-grid { gap: 1.25rem; }
+.card-grid a.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.card-grid a.card h3 { margin-bottom: 0; }
+.card-grid a.card .sub { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+.card-grid a.card::after {
+  content: '→';
+  position: absolute;
+  top: 1.3rem;
+  right: 1.4rem;
+  color: var(--text-dim);
+  transition: transform var(--transition), color var(--transition);
+}
+.card-grid a.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 106, 61, 0.35);
+  box-shadow: 0 16px 34px rgba(28, 25, 23, 0.09);
+}
+.card-grid a.card:hover::after {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* Tables — softer header, row hover. */
+.tbl th {
+  background: var(--surface-2);
+}
+.tbl th:first-child { border-top-left-radius: 10px; }
+.tbl th:last-child { border-top-right-radius: 10px; }
+.tbl tbody tr { transition: background var(--transition); }
+.tbl tbody tr:hover { background: var(--surface-2); }
+.tbl td a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.tbl td a:hover { text-decoration: underline; }
+
+/* Deal / recommendation / social cards — elevate onto surface with hover. */
+.recommendation-card,
+.deal-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: 0 2px 12px rgba(28, 25, 23, 0.04);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.recommendation-card:hover,
+.deal-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: 0 14px 30px rgba(28, 25, 23, 0.08);
+}
+.recommendation-grid,
+.deal-board { gap: 1.25rem; }
+.rec-meta span,
+.deal-facts div {
+  background: var(--bg);
+}
+
+/* Inputs — slightly softer, consistent with landing surfaces. */
+.field input,
+.field select,
+.field textarea {
+  background: var(--surface);
+  border-color: var(--border);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Auth card — lift it a touch to feel premium like the hero. */
+.auth-card {
+  box-shadow: 0 30px 70px rgba(28, 25, 23, 0.12);
+}
+
+@media (max-width: 820px) {
+  .main { padding: 1.5rem 1.25rem 3rem; }
+}
+
+/* Sidebar column spacing for the home dashboards (app only). */
+.dash-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }

@@ -6,6 +6,7 @@ hard-codes Instagram, YouTube, etc.
 
 from __future__ import annotations
 
+import base64
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Tuple
@@ -58,10 +59,19 @@ class CreatorService:
         return creator
 
     # -- Connection flow ----------------------------------------------------
-    def start_connect(self, creator_id: str, platform: Platform) -> str:
+    def start_connect(
+        self, creator_id: str, platform: Platform, return_to: str = ""
+    ) -> str:
         self.get_creator(creator_id)  # validate creator exists
         provider = self._registry.get(platform)
-        state = uuid.uuid4().hex
+        nonce = uuid.uuid4().hex
+        # Carry the UI return path inside the state so the callback can send
+        # the user back to where they started (e.g. the app social page).
+        if return_to:
+            enc = base64.urlsafe_b64encode(return_to.encode()).decode().rstrip("=")
+            state = f"{nonce}.{enc}"
+        else:
+            state = nonce
         self._states.save(state, creator_id)
         return provider.authorize_url(state, self._settings.redirect_uri(platform.value))
 

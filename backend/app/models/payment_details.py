@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from .base import CamelModel
 
@@ -55,6 +55,14 @@ class PayoutAccountCreate(CamelModel):
     pan: Optional[str] = None
     gstin: Optional[str] = None
     is_default: bool = False
+
+    @model_validator(mode="after")
+    def required_destination_fields(self) -> "PayoutAccountCreate":
+        if self.method == PayoutMethod.upi and not self.upi_vpa:
+            raise ValueError("UPI VPA is required for UPI payouts.")
+        if self.method == PayoutMethod.bank and not (self.account_number and self.ifsc):
+            raise ValueError("Account number and IFSC are required for bank payouts.")
+        return self
 
 
 class PayoutAccountUpdate(CamelModel):

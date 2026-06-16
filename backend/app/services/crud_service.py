@@ -39,7 +39,7 @@ class CrudService(Generic[T]):
 
     def update(self, entity_id: str, patch: dict) -> T:
         entity = self.get(entity_id)
-        updated = entity.model_copy(update=patch)
+        updated = entity.__class__.model_validate({**entity.model_dump(), **patch})
         return self._repo.update(updated)
 
     def delete(self, entity_id: str) -> None:

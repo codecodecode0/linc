@@ -217,6 +217,14 @@ body {
   width: 100%;
 }
 
+/* Anchors styled as buttons */
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 /* Main layout */
 main {
   position: relative;

@@ -28,7 +28,18 @@ from .content import (
     ContentUpdate,
 )
 from .creator import Creator
-from .deal import Deal, DealCreate, DealStatus, DealType, DealUpdate
+from .deal import (
+    Deal,
+    DealAction,
+    DealActionType,
+    DealActor,
+    DealCreate,
+    DealDeliverable,
+    DealEvent,
+    DealStatus,
+    DealType,
+    DealUpdate,
+)
 from .insights import (
     AgeGenderBreakdown,
     AudienceDemographics,
@@ -91,7 +102,12 @@ __all__ = [
     "CampaignObjective",
     "CampaignStatus",
     "Deal",
+    "DealAction",
+    "DealActionType",
+    "DealActor",
     "DealCreate",
+    "DealDeliverable",
+    "DealEvent",
     "DealUpdate",
     "DealType",
     "DealStatus",

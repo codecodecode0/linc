@@ -4,7 +4,7 @@ from datetime import date, datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator, model_validator
 
 from .base import CamelModel
 
@@ -57,6 +57,19 @@ class CampaignCreate(CamelModel):
     target_audience: Optional[Dict[str, Any]] = None
     platforms: Optional[List[str]] = None
 
+    @field_validator("budget_amount")
+    @classmethod
+    def budget_not_negative(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("Budget cannot be negative.")
+        return value
+
+    @model_validator(mode="after")
+    def dates_in_order(self) -> "CampaignCreate":
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValueError("End date must be after start date.")
+        return self
+
 
 class CampaignUpdate(CamelModel):
     name: Optional[str] = None
@@ -68,3 +81,16 @@ class CampaignUpdate(CamelModel):
     end_date: Optional[date] = None
     target_audience: Optional[Dict[str, Any]] = None
     platforms: Optional[List[str]] = None
+
+    @field_validator("budget_amount")
+    @classmethod
+    def budget_not_negative(cls, value: Optional[int]) -> Optional[int]:
+        if value is not None and value < 0:
+            raise ValueError("Budget cannot be negative.")
+        return value
+
+    @model_validator(mode="after")
+    def dates_in_order(self) -> "CampaignUpdate":
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValueError("End date must be after start date.")
+        return self

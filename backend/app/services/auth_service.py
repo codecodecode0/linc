@@ -66,13 +66,30 @@ class AuthService:
             expires_in=self._settings.otp_ttl_seconds,
         )
 
-    def verify_otp(self, channel: OtpChannel, value: str, code: str) -> Session:
+    def verify_otp(
+        self,
+        channel: OtpChannel,
+        value: str,
+        code: str,
+        account_type: Optional[AccountType] = None,
+    ) -> Session:
+        if self._settings.google_login_mock:
+            found = self._find_or_create_mock(
+                account_type or AccountType.creator, channel, value
+            )
+            self._otps.delete(self._key(channel, value))
+            return self._session(*found)
+
         expected = self._otps.get(self._key(channel, value))
         if not expected or not secrets.compare_digest(expected, code):
             raise AuthError("Invalid or expired code.")
         self._otps.delete(self._key(channel, value))
 
-        found = self._find_account(channel, value)
+        found = (
+            self._find_account_by_type(account_type, channel, value)
+            if account_type
+            else self._find_account(channel, value)
+        )
         if not found:
             raise AuthError("No account found. Please sign up first.")
         account_type, account = found
@@ -158,8 +175,7 @@ class AuthService:
     def _find_or_create_google(
         self, account_type: AccountType, email: str, sub: str, name: str
     ) -> Tuple[AccountType, object]:
-        # Match an existing account by email across both types.
-        existing = self._find_account(OtpChannel.email, email)
+        existing = self._find_account_by_type(account_type, OtpChannel.email, email)
         if existing:
             etype, account = existing
             if not account.google_sub:
@@ -186,6 +202,56 @@ class AuthService:
             self._creators.save(account)  # type: ignore[arg-type]
         else:
             self._brands.save(account)  # type: ignore[arg-type]
+
+    def _find_account_by_type(
+        self, account_type: Optional[AccountType], channel: OtpChannel, value: str
+    ) -> Optional[Tuple[AccountType, object]]:
+        if account_type == AccountType.creator:
+            account = (
+                self._creators.get_by_email(value)
+                if channel == OtpChannel.email
+                else self._creators.get_by_phone(value)
+            )
+            return (AccountType.creator, account) if account else None
+        if account_type == AccountType.brand:
+            account = (
+                self._brands.get_by_email(value)
+                if channel == OtpChannel.email
+                else self._brands.get_by_phone(value)
+            )
+            return (AccountType.brand, account) if account else None
+        return None
+
+    def _find_or_create_mock(
+        self, account_type: AccountType, channel: OtpChannel, value: str
+    ) -> Tuple[AccountType, object]:
+        existing = self._find_account_by_type(account_type, channel, value)
+        if existing:
+            return existing
+
+        if channel == OtpChannel.email:
+            email = value
+            phone = ""
+            name_seed = value.split("@", 1)[0].replace(".", " ").replace("_", " ")
+        else:
+            email = f"{account_type.value}.{uuid.uuid4().hex[:8]}@mock.linc"
+            phone = value
+            name_seed = f"Demo {account_type.value.title()}"
+        name = " ".join(part.capitalize() for part in name_seed.split() if part)
+
+        if account_type == AccountType.creator:
+            creator = Creator(
+                id=str(uuid.uuid4()), name=name or "Demo Creator", email=email,
+                phone=phone, handle=_handle(name or email), avatar=_avatar(name or "DC"),
+                status="onboarding",
+            )
+            return AccountType.creator, self._creators.create(creator)
+
+        brand = Brand(
+            id=str(uuid.uuid4()), name=name or "Demo Brand", email=email,
+            phone=phone, status="active",
+        )
+        return AccountType.brand, self._brands.create(brand)
 
     def _session(self, account_type: AccountType, account: object) -> Session:
         token = self._tokens.issue(account_type.value, account.id)  # type: ignore[attr-defined]

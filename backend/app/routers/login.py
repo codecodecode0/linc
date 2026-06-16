@@ -28,7 +28,7 @@ def request_otp(body: OtpRequest, auth: AuthService = Depends(get_auth_service))
 @router.post("/otp/verify", response_model=Session)
 def verify_otp(body: OtpVerify, auth: AuthService = Depends(get_auth_service)):
     try:
-        return auth.verify_otp(body.channel, body.value, body.code)
+        return auth.verify_otp(body.channel, body.value, body.code, body.account_type)
     except AuthError as exc:
         raise HTTPException(status_code=401, detail=str(exc))
 
@@ -49,18 +49,18 @@ async def google_callback(
     auth: AuthService = Depends(get_auth_service),
     config: Settings = Depends(get_settings_dep),
 ):
-    base = config.frontend_url.rstrip("/")
+    base = f"{config.frontend_url.rstrip('/')}/app.html"
     if error or not code:
-        return RedirectResponse(f"{base}/?{urlencode({'error': error or 'denied'})}")
+        return RedirectResponse(f"{base}?{urlencode({'error': error or 'denied'})}")
     try:
         session = await auth.complete_google(code, state)
     except AuthError as exc:
-        return RedirectResponse(f"{base}/?{urlencode({'error': str(exc)})}")
+        return RedirectResponse(f"{base}?{urlencode({'error': str(exc)})}")
     # Hand the session token back to the UI.
     params = urlencode(
         {"token": session.token, "loggedIn": session.account_type.value}
     )
-    return RedirectResponse(f"{base}/?{params}")
+    return RedirectResponse(f"{base}?{params}")
 
 
 @router.get("/me", response_model=Session)
